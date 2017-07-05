@@ -7,7 +7,7 @@ const mealList = [
     type: 'Breakfast',
     kcal: 510,
     fat: 16,
-    proteins: 26,
+    protein: 26,
     carbs: 60
   },
   {
@@ -15,7 +15,7 @@ const mealList = [
     type: 'Breakfast',
     kcal: 510,
     fat: 16,
-    proteins: 26,
+    protein: 26,
     carbs: 60
   },
   {
@@ -23,7 +23,7 @@ const mealList = [
     type: 'Breakfast',
     kcal: 510,
     fat: 16,
-    proteins: 26,
+    protein: 26,
     carbs: 60
   },
   {
@@ -31,7 +31,7 @@ const mealList = [
     type: 'Breakfast',
     kcal: 510,
     fat: 16,
-    proteins: 26,
+    protein: 26,
     carbs: 60
   },
   {
@@ -39,7 +39,44 @@ const mealList = [
     type: 'Breakfast',
     kcal: 510,
     fat: 16,
-    proteins: 26,
+    protein: 26,
+    carbs: 60
+  }
+];
+const ingredientList = [
+  {
+    name: 'Milk',
+    kcal: 510,
+    fat: 16,
+    protein: 26,
+    carbs: 60
+  },
+  {
+    name: 'Chocolate',
+    kcal: 510,
+    fat: 16,
+    protein: 26,
+    carbs: 60
+  },
+  {
+    name: 'Flour',
+    kcal: 510,
+    fat: 16,
+    protein: 26,
+    carbs: 60
+  },
+  {
+    name: 'Bread',
+    kcal: 510,
+    fat: 16,
+    protein: 26,
+    carbs: 60
+  },
+  {
+    name: 'Orange Juice',
+    kcal: 510,
+    fat: 16,
+    protein: 26,
     carbs: 60
   }
 ];
@@ -59,6 +96,7 @@ class DataContainer extends React.Component {
     return (
       <App
         mealList={meals}
+        ingredientList={ingredientList}
         showMealForm={showMealForm}
         showIngredientForm={showIngredientForm}
       />

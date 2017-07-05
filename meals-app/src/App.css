@@ -35,7 +35,7 @@ html {
 .react-autosuggest__suggestions-container--open {
   display: block;
   position: absolute;
-  top: 62px;
+  top: 55px;
   width: 300px;
   border: 6px solid #dadada;
   border-top: none;

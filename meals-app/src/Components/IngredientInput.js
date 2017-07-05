@@ -1,36 +1,20 @@
 import React from 'react';
 import Autosuggest from 'react-autosuggest';
 
-const suggestions = [
-  { name: 'Korn' },
-  { name: 'Melk' },
-  { name: 'Brus' },
-  { name: 'Mel' }
-];
-
-class MealForm extends React.Component {
+class IngredientInput extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: 'Hei!',
-      selectedIngredient: null,
-      suggestions: [],
-      ingredients: []
+      value: '',
+      suggestions: []
     };
   }
 
   onSuggestionsFetchRequested({ value }) {
-    console.log(value);
     this.setState({
-      suggestions: suggestions.filter(item =>
+      suggestions: this.props.ingredientList.filter(item =>
         item.name.toLowerCase().includes(value.toLowerCase())
       )
-    });
-  }
-
-  didAddIngredient(ingredient) {
-    this.setState({
-      ingredients: this.state.ingredients.concat([ingredient])
     });
   }
 
@@ -57,9 +41,8 @@ class MealForm extends React.Component {
   }
 
   onSuggestionSelected(value, { suggestion }) {
-    this.setState({
-      selectedIngredient: suggestion
-    });
+    this.setState({ value: '' });
+    this.props.addIngredient(suggestion);
   }
 
   render() {
@@ -87,20 +70,6 @@ class MealForm extends React.Component {
               renderSuggestion={this.renderSuggestion}
               inputProps={inputProps}
             />
-            <button
-              onClick={this.didAddIngredient.bind}
-              style={{
-                height: '68px',
-                border: 'none',
-                marginLeft: '8px',
-                padding: '0 25px',
-                backgroundColor: '#88E391',
-                borderRadius: '6px',
-                color: 'white'
-              }}
-            >
-              +
-            </button>
           </div>
         </div>
       </div>
@@ -120,4 +89,4 @@ const styles = {
   }
 };
 
-export default MealForm;
+export default IngredientInput;

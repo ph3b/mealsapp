@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import MenuBar from './Components/MenuBar';
 import Banner from './Components/Banner';
 import MealList from './Components/MealList';
-import MealForm from './Components/MealForm';
+import NewMeal from './Components/NewMeal';
 
 class App extends Component {
   render() {
@@ -15,7 +15,9 @@ class App extends Component {
           style={{ maxWidth: '800px', marginLeft: 'auto', marginRight: 'auto' }}
         >
           <MenuBar />
-          <MealForm />
+          <div style={{ marginBottom: '50px' }}>
+            <NewMeal ingredientList={this.props.ingredientList} />
+          </div>
           <MealList mealList={this.props.mealList} />
         </div>
       </div>
