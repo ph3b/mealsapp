@@ -1,12 +1,30 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-const MenuBar = () =>
+const MenuBar = ({ match }) =>
   <div>
-    <span style={{ ...styles.menuButton, ...styles.menuButtonActive }}>
+    <MenuItem to="/" isActive={match.url === '/'}>
+      My meals
+    </MenuItem>
+    <MenuItem to="/newmeal" isActive={match.url === '/newmeal'}>
       New meal
-    </span>
-    <span style={{ ...styles.menuButton }}>New ingredient</span>
+    </MenuItem>
+    <MenuItem to="/newingredient" isActive={match.url === 'newingredient'}>
+      New Ingredient
+    </MenuItem>
   </div>;
+
+const MenuItem = ({ children, isActive, to }) => {
+  let style = styles.menuButton;
+  if (isActive) {
+    style = { ...style, ...styles.menuButtonActive };
+  }
+  return (
+    <Link to={to} style={style}>
+      {children}
+    </Link>
+  );
+};
 
 const styles = {
   menuButtonActive: {

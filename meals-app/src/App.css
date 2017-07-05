@@ -5,6 +5,10 @@ html {
   font-family: 'Raleway';
 }
 
+a {
+  color: black;
+}
+
 .react-autosuggest__container {
   position: relative;
   display: inline;

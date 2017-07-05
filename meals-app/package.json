@@ -16,7 +16,9 @@
     "flow-bin": "^0.49.1",
     "react": "15.6.1",
     "react-autosuggest": "^9.3.1",
-    "react-dom": "15.6.1"
+    "react-dom": "15.6.1",
+    "react-router-dom": "^4.1.1",
+    "recharts": "^1.0.0-alpha.1"
   },
   "devDependencies": {
     "nwb": "0.18.x"

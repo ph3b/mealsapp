@@ -6,11 +6,19 @@ const IngredientList = ({ ingredientList, removeIngredient }) => {
       <table style={{ width: '100%' }}>
         <tbody>
           <tr style={{ borderBottom: '1px solid black' }}>
-            <td>Name</td>
-            <td>Kcal</td>
-            <td>Protein</td>
-            <td>Fat</td>
-            <td>Carbs</td>
+            <td />
+            <td>
+              <strong>Kcal</strong>
+            </td>
+            <td>
+              <strong>Protein</strong>
+            </td>
+            <td>
+              <strong>Fat</strong>
+            </td>
+            <td>
+              <strong>Carbs</strong>
+            </td>
             <td />
           </tr>
           {ingredientList.map((ingredient, i) => {

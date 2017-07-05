@@ -53,10 +53,10 @@ const ingredientList = [
   },
   {
     name: 'Chocolate',
-    kcal: 510,
-    fat: 16,
-    protein: 26,
-    carbs: 60
+    kcal: 300,
+    fat: 30,
+    protein: 16,
+    carbs: 50
   },
   {
     name: 'Flour',

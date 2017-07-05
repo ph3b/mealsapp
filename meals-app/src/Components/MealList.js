@@ -7,11 +7,21 @@ const MealList = ({ mealList }) => {
         <tbody>
           <tr style={{ borderBottom: '1px solid black' }}>
             <td />
-            <td>Type</td>
-            <td>Kcal</td>
-            <td>Protein</td>
-            <td>Fat</td>
-            <td>Carbs</td>
+            <td>
+              <strong>Type</strong>
+            </td>
+            <td>
+              <strong>Kcal</strong>
+            </td>
+            <td>
+              <strong>Protein</strong>
+            </td>
+            <td>
+              <strong>Fat</strong>
+            </td>
+            <td>
+              <strong>Carbs</strong>
+            </td>
           </tr>
           {mealList.map((meal, i) =>
             <tr key={i}>
