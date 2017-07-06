@@ -8,6 +8,9 @@ const IngredientList = ({ ingredientList, removeIngredient }) => {
           <tr style={{ borderBottom: '1px solid black' }}>
             <td />
             <td>
+              <strong>Amount</strong>
+            </td>
+            <td>
               <strong>Kcal</strong>
             </td>
             <td>
@@ -29,6 +32,17 @@ const IngredientList = ({ ingredientList, removeIngredient }) => {
               <tr key={i}>
                 <td>
                   {ingredient.name}
+                </td>
+                <td style={{ width: '120px' }}>
+                  <input
+                    style={{
+                      width: '100px',
+                      fontSize: '11px',
+                      border: 'none',
+                      borderBottom: '1px solid black'
+                    }}
+                    placeholder="Enter weight (g)"
+                  />
                 </td>
                 <td>
                   {ingredient.kcal}

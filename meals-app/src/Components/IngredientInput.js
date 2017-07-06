@@ -8,6 +8,7 @@ class IngredientInput extends React.Component {
       value: '',
       suggestions: []
     };
+    this.renderSuggestion = this.renderSuggestion.bind(this);
   }
 
   onSuggestionsFetchRequested({ value }) {
@@ -29,9 +30,18 @@ class IngredientInput extends React.Component {
   }
 
   renderSuggestion(suggestion) {
+    const { pickedIngredients } = this.props;
+
     return (
-      <div>
-        {suggestion.name}
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div>
+          {suggestion.name}
+        </div>
+        <div>
+          {pickedIngredients.includes(suggestion)
+            ? <span style={{ color: 'rgb(0, 196, 159' }}>&#10004;</span>
+            : null}
+        </div>
       </div>
     );
   }

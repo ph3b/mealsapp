@@ -3,7 +3,7 @@ import React from 'react';
 const Banner = () =>
   <div
     style={{
-      height: 200,
+      height: 150,
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',

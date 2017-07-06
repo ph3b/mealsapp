@@ -61,6 +61,7 @@ class NewMeal extends React.Component {
   }
 
   addIngredient(ingredient) {
+    if (this.state.pickedIngredients.includes(ingredient)) return;
     this.setState({
       pickedIngredients: this.state.pickedIngredients.concat([ingredient])
     });
@@ -99,17 +100,19 @@ class NewMeal extends React.Component {
       <div>
         <IngredientInput
           ingredientList={this.props.ingredientList}
+          pickedIngredients={this.state.pickedIngredients}
           addIngredient={this.addIngredient}
         />
         {pickedIngredients.length > 0 &&
-          <div style={{ display: 'flex' }}>
-            <div style={{ flexGrow: 5 }}>
-              <IngredientList
-                removeIngredient={this.removeIngredient}
-                ingredientList={this.state.pickedIngredients}
-              />
-            </div>
-            <div>
+          <div>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                flexDirection: 'column',
+                alignItems: 'center'
+              }}
+            >
               <PieChart width={200} height={200} onMouseEnter={this.onPieEnter}>
                 <Pie
                   data={pieData}
@@ -130,15 +133,21 @@ class NewMeal extends React.Component {
               </PieChart>
               <div style={{ display: 'flex', justifyContent: 'space-around' }}>
                 <div>
-                  <Circle color={COLORS[0]} /> Fat
-                </div>
-                <div>
                   <Circle color={COLORS[1]} /> Carbs
+                </div>
+                <div style={{ margin: '0 8px 0 8px' }}>
+                  <Circle color={COLORS[0]} /> Fat
                 </div>
                 <div>
                   <Circle color={COLORS[2]} /> Proteins
                 </div>
               </div>
+            </div>
+            <div style={{ flexGrow: 5, padding: '20px' }}>
+              <IngredientList
+                removeIngredient={this.removeIngredient}
+                ingredientList={this.state.pickedIngredients}
+              />
             </div>
           </div>}
       </div>
