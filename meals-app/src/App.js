@@ -1,48 +1,34 @@
 import './App.css';
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect
+} from 'react-router-dom';
 
-import MenuBar from './Components/MenuBar';
+import Home from './Components/Home';
+import LoginForm from './Components/LoginForm';
 import Banner from './Components/Banner';
-import MealList from './Components/MealList';
-import NewMeal from './Components/NewMeal';
 
-class App extends Component {
-  render() {
-    const { match } = this.props;
+const IS_LOGGED_IN = true;
 
-    return (
-      <div>
-        <Banner />
-        <div
-          style={{ maxWidth: '800px', marginLeft: 'auto', marginRight: 'auto' }}
-        >
-          <Router>
-            <div>
-              <Route path="/:page?" component={MenuBar} />
-              <Route
-                exact
-                path="/newmeal"
-                render={match =>
-                  <div style={{ marginBottom: '50px' }}>
-                    <NewMeal
-                      match={match}
-                      ingredientList={this.props.ingredientList}
-                    />
-                  </div>}
-              />
-              <Route
-                path="/"
-                exact
-                render={() =>
-                  <MealList match={match} mealList={this.props.mealList} />}
-              />
-            </div>
-          </Router>
-        </div>
-      </div>
-    );
-  }
-}
-
+const App = ({ match, mealList, ingredientList }) =>
+  <div>
+    <Banner />
+    <div style={{ maxWidth: '800px', marginLeft: 'auto', marginRight: 'auto' }}>
+      <Router>
+        <Switch>
+          <Route exact path="/login" component={LoginForm} />
+          <Route
+            path="/"
+            render={match =>
+              IS_LOGGED_IN
+                ? <Home mealList={mealList} ingredientList={ingredientList} />
+                : <Redirect to="/login" />}
+          />
+        </Switch>
+      </Router>
+    </div>
+  </div>;
 export default App;
