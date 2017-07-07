@@ -3,3 +3,4 @@ meals-api/env
 *.idea
 *.sqlite3
 *.vagrant
+*.pyc
