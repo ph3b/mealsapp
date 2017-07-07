@@ -2,16 +2,23 @@ import graphene
 from graphene_django import DjangoObjectType
 from models import Meal, Ingredient, MealIngredient
 from django.contrib.auth.models import User
+from graphene import relay, ObjectType, AbstractType
+from graphene_django.filter import DjangoFilterConnectionField
 
 
 class IngredientType(DjangoObjectType):
     class Meta:
         model = Ingredient
+        filter_fields = {
+            "name": ['exact', 'icontains', 'istartswith']
+        }
+        interfaces = (relay.Node,)
 
 
 class MealIngredientType(DjangoObjectType):
     class Meta:
         model = MealIngredient
+        interfaces = (relay.Node,)
 
 
 class MealType(DjangoObjectType):
@@ -19,6 +26,7 @@ class MealType(DjangoObjectType):
 
     class Meta:
         model = Meal
+        interfaces = (relay.Node,)
 
     @graphene.resolve_only_args
     def resolve_ingredients(self):
@@ -33,10 +41,10 @@ class UserType(DjangoObjectType):
 
 class Query(graphene.AbstractType):
     all_meals = graphene.List(MealType)
-    all_ingredients = graphene.List(IngredientType)
-    ingredient = graphene.Field(IngredientType, id=graphene.Int())
-    meal = graphene.Field(MealType, id=graphene.Int())
-    me = graphene.Field(UserType, username=graphene.String())
+    all_ingredients = DjangoFilterConnectionField(IngredientType)
+    ingredient = DjangoFilterConnectionField(IngredientType, id=graphene.Int())
+    meal = relay.Node.Field(MealType, id=graphene.Int())
+    me = relay.Node.Field(UserType, username=graphene.String())
 
     def resolve_me(self, args, context, info):
         username = args.get("username")

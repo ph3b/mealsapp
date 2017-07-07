@@ -13,11 +13,13 @@ class BaseModel(models.Model):
     class Meta:
         abstract = True
 
+
 class Ingredient(BaseModel):
-    kcals = models.IntegerField()
-    carbs = models.IntegerField()
-    protein = models.IntegerField()
-    fat = models.IntegerField()
+    kcal = models.FloatField()
+    carbs = models.FloatField()
+    protein = models.FloatField()
+    fat = models.FloatField()
+    fiber = models.FloatField()
 
 
 class Meal(BaseModel):
@@ -28,7 +30,7 @@ class Meal(BaseModel):
 class MealIngredient(models.Model):
     meal = models.ForeignKey(Meal, on_delete=models.CASCADE)
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
-    amount_grams = models.IntegerField()
+    amount_grams = models.FloatField()
 
     def __unicode__(self):
         return self.meal.name + " > " + self.ingredient.name
