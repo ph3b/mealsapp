@@ -1,0 +1,5 @@
+meals-api/env
+*.vscode
+*.idea
+*.sqlite3
+*.vagrant
