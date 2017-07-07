@@ -1,11 +1,13 @@
 import React from 'react';
 import Autosuggest from 'react-autosuggest';
+import { gql, graphql } from 'react-apollo';
 
 class IngredientInput extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       value: '',
+      enteredValue: '',
       suggestions: []
     };
     this.renderSuggestion = this.renderSuggestion.bind(this);
@@ -15,7 +17,8 @@ class IngredientInput extends React.Component {
     this.setState({
       suggestions: this.props.ingredientList.filter(item =>
         item.name.toLowerCase().includes(value.toLowerCase())
-      )
+      ),
+      enteredValue: value
     });
   }
 
@@ -36,11 +39,6 @@ class IngredientInput extends React.Component {
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div>
           {suggestion.name}
-        </div>
-        <div>
-          {pickedIngredients.includes(suggestion)
-            ? <span style={{ color: 'rgb(0, 196, 159' }}>&#10004;</span>
-            : null}
         </div>
       </div>
     );
@@ -63,12 +61,17 @@ class IngredientInput extends React.Component {
       placeholder: 'Choose an ingredient'
     };
 
+    let ingredients = [];
+    if (this.props.data.allIngredients) {
+      const { allIngredients } = this.props.data;
+      ingredients = allIngredients.edges.map(edge => edge.node);
+    }
     return (
       <div>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <div style={{ margin: '30px', display: 'flex' }}>
             <Autosuggest
-              suggestions={suggestions}
+              suggestions={ingredients}
               onSuggestionSelected={this.onSuggestionSelected.bind(this)}
               onSuggestionsFetchRequested={this.onSuggestionsFetchRequested.bind(
                 this
@@ -87,6 +90,12 @@ class IngredientInput extends React.Component {
   }
 }
 
+IngredientInput.defaultProps = {
+  data: {
+    allIngredients: []
+  }
+};
+
 const styles = {
   ingredientInput: {
     fontSize: '20px',
@@ -99,4 +108,24 @@ const styles = {
   }
 };
 
-export default IngredientInput;
+const query = gql`
+  query($searchIngredient: String!) {
+    allIngredients(name_Istartswith: $searchIngredient) {
+      edges {
+        node {
+          id
+          name
+          kcal
+          carbs
+          protein
+          fat
+          fiber
+        }
+      }
+    }
+  }
+`;
+
+export default graphql(query, {
+  options: { variables: { searchIngredient: 'Milk' } }
+})(IngredientInput);
