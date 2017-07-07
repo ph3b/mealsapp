@@ -4,8 +4,6 @@ from models import Meal, Ingredient, MealIngredient
 from django.contrib.auth.models import User
 
 
-from django.db import connection
-
 class IngredientType(DjangoObjectType):
     class Meta:
         model = Ingredient
@@ -14,6 +12,7 @@ class IngredientType(DjangoObjectType):
 class MealIngredientType(DjangoObjectType):
     class Meta:
         model = MealIngredient
+
 
 class MealType(DjangoObjectType):
     ingredients = graphene.List(MealIngredientType)
@@ -25,10 +24,12 @@ class MealType(DjangoObjectType):
     def resolve_ingredients(self):
         return MealIngredient.objects.filter(meal=self)
 
+
 class UserType(DjangoObjectType):
     class Meta:
         model = User
         exclude_fields = ("password",)
+
 
 class Query(graphene.AbstractType):
     all_meals = graphene.List(MealType)
@@ -38,7 +39,6 @@ class Query(graphene.AbstractType):
     me = graphene.Field(UserType, username=graphene.String())
 
     def resolve_me(self, args, context, info):
-        print context.user.is_authenticated()
         username = args.get("username")
         if username is not None:
             return User.objects.filter(username=username)[0]

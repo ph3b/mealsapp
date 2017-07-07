@@ -16,10 +16,16 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from graphene_django.views import GraphQLView
+from rest_framework.authtoken import views
+
+
 from .schema import schema
+from meals.views import register
 
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^graphql', GraphQLView.as_view(graphiql=True, schema=schema)),
+    url(r'^register', register),
+    url(r'^login', views.obtain_auth_token)
 ]
