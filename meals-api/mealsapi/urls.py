@@ -22,6 +22,12 @@ from rest_framework.authtoken import views
 from .schema import schema
 from meals.views import register
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+from graphene_django.views import GraphQLView
+
+
+class PrivateGraphQLView(LoginRequiredMixin, GraphQLView):
+    pass
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),

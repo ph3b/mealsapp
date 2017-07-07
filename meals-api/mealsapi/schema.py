@@ -1,9 +1,9 @@
 import graphene
-import meals.schema
+import meals.mutations
+import meals.queries
 
 
-class Query(meals.schema.Query, graphene.ObjectType):
+class Query(meals.queries.Query, graphene.ObjectType):
     pass
 
-
-schema = graphene.Schema(query=Query, mutation=meals.schema.Mutations)
+schema = graphene.Schema(query=Query, mutation=meals.mutations.Mutations)
