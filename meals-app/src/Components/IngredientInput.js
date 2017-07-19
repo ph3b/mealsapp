@@ -8,6 +8,7 @@ class IngredientInput extends React.Component {
     this.state = {
       value: '',
       enteredValue: '',
+      allIngredients: [],
       suggestions: []
     };
     this.renderSuggestion = this.renderSuggestion.bind(this);
@@ -15,7 +16,7 @@ class IngredientInput extends React.Component {
 
   onSuggestionsFetchRequested({ value }) {
     this.setState({
-      suggestions: this.props.ingredientList.filter(item =>
+      suggestions: this.state.allIngredients.filter(item =>
         item.name.toLowerCase().includes(value.toLowerCase())
       ),
       enteredValue: value
@@ -30,6 +31,15 @@ class IngredientInput extends React.Component {
 
   getSuggestionValue(suggestion) {
     return suggestion.name;
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.state.suggestions.length === 0 && nextProps.data.allIngredients) {
+      const allIngredients = nextProps.data.allIngredients.edges.map(
+        edge => edge.node
+      );
+      this.setState({ allIngredients });
+    }
   }
 
   renderSuggestion(suggestion) {
@@ -61,17 +71,14 @@ class IngredientInput extends React.Component {
       placeholder: 'Choose an ingredient'
     };
 
-    let ingredients = [];
-    if (this.props.data.allIngredients) {
-      const { allIngredients } = this.props.data;
-      ingredients = allIngredients.edges.map(edge => edge.node);
-    }
+    console.log(this.state);
+
     return (
       <div>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <div style={{ margin: '30px', display: 'flex' }}>
             <Autosuggest
-              suggestions={ingredients}
+              suggestions={suggestions}
               onSuggestionSelected={this.onSuggestionSelected.bind(this)}
               onSuggestionsFetchRequested={this.onSuggestionsFetchRequested.bind(
                 this
@@ -92,7 +99,7 @@ class IngredientInput extends React.Component {
 
 IngredientInput.defaultProps = {
   data: {
-    allIngredients: []
+    tasks: []
   }
 };
 
@@ -127,5 +134,5 @@ const query = gql`
 `;
 
 export default graphql(query, {
-  options: { variables: { searchIngredient: 'Milk' } }
+  options: { variables: { searchIngredient: '' } }
 })(IngredientInput);
