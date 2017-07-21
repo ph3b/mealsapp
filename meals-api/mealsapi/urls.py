@@ -1,37 +1,30 @@
-"""mealsapi URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/1.11/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.conf.urls import url, include
-    2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
-"""
 from django.conf.urls import url
 from django.contrib import admin
 from graphene_django.views import GraphQLView
 from rest_framework.authtoken import views
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import authentication_classes, permission_classes, api_view
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 from .schema import schema
 from meals.views import register
 
-from django.contrib.auth.mixins import LoginRequiredMixin
-from graphene_django.views import GraphQLView
-
+def graphql_token_view():
+    view = GraphQLView.as_view(schema=schema)
+    view = permission_classes((IsAuthenticated,))(view)
+    view = authentication_classes((TokenAuthentication,))(view)
+    view = api_view(['POST'])(view)
+    return view
 
 class PrivateGraphQLView(LoginRequiredMixin, GraphQLView):
     pass
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^graphql', GraphQLView.as_view(graphiql=True, schema=schema)),
+    url(r'^graphql', graphql_token_view()),
+    url(r'^graphiql', PrivateGraphQLView.as_view(graphiql=True, schema=schema)),
     url(r'^register', register),
     url(r'^login', views.obtain_auth_token)
 ]

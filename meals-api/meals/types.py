@@ -5,7 +5,6 @@ from graphene import relay
 from models import Ingredient, MealIngredient, Meal
 from django.contrib.auth.models import User
 
-
 class IngredientType(DjangoObjectType):
     class Meta:
         model = Ingredient
@@ -28,7 +27,7 @@ class MealType(DjangoObjectType):
 
     class Meta:
         model = Meal
-        only_fields = ["name", "id", "ingredients"]
+        only_fields = ["name", "id", "ingredients", "kind"]
         interfaces = (relay.Node,)
 
     @graphene.resolve_only_args

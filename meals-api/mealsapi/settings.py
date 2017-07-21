@@ -43,6 +43,12 @@ INSTALLED_APPS = [
     'meals'
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    )
+}
 CORS_ORIGIN_ALLOW_ALL = True
 CSRF_COOKIE_SECURE = False
 
@@ -81,11 +87,11 @@ WSGI_APPLICATION = 'mealsapi.wsgi.application'
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 DATABASES = {
-    'sqlite': {
+    'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     },
-    'default': {
+    'psql': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'mealsdb',
         'USER': 'mealuser',

@@ -4,6 +4,8 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 
+mealChoices = (("Breakfast", "Breakfast"), ("Lunch", "Lunch"), ("Dinner", "Dinner"), ("Snack", "Snack"), ("Supplement", "Supplement"), ("Dessert", "Dessert"))
+
 class BaseModel(models.Model):
     name = models.CharField(max_length=100)
 
@@ -24,6 +26,7 @@ class Ingredient(BaseModel):
 
 class Meal(BaseModel):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="meals")
+    kind = models.CharField(max_length=100, blank=True, null=True, choices=mealChoices)
     ingredients = models.ManyToManyField(Ingredient, through="MealIngredient", related_name="meal")
 
 

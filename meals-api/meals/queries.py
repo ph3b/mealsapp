@@ -9,12 +9,12 @@ from models import Meal, Ingredient
 
 class Query(graphene.AbstractType):
     all_ingredients = DjangoFilterConnectionField(IngredientType)
-    all_meals = graphene.List(MealType)
+    all_meals = DjangoFilterConnectionField(MealType)
     ingredient = DjangoFilterConnectionField(IngredientType, id=graphene.Int())
     meal = relay.Node.Field(MealType, id=graphene.Int())
 
     def resolve_all_meals(self, args, context, info):
-        return Meal.objects.filter(owner=context.user)
+        return Meal.objects.all()
 
     def resolve_all_ingredients(self, args, context, info):
         return Ingredient.objects.all()
