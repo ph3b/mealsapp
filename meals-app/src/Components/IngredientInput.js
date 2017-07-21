@@ -6,7 +6,7 @@ import Spinner from './Images/spinner.gif';
 
 const query = gql`
   query($searchIngredient: String!) {
-    allIngredients(name_Istartswith: $searchIngredient, first: 20) {
+    allIngredients(name_Icontains: $searchIngredient, first: 20) {
       edges {
         node {
           id
