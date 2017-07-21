@@ -8,6 +8,7 @@ const query = gql`
         node {
           id,
           name,
+          kind,
           ingredients {
             amountGrams,
             ingredient {
@@ -26,7 +27,6 @@ const query = gql`
 `;
 
 const MealList = ({ allMeals, loading }) => {
-  console.log(allMeals)
   return (
     <div>
       <table style={{ width: '100%' }}>
@@ -55,7 +55,7 @@ const MealList = ({ allMeals, loading }) => {
                 {meal.name}
               </td>
               <td>
-                {meal.type}
+                {meal.kind.substring(0, 1)}{meal.kind.substring(1).toLowerCase()}
               </td>
               <td>
                 {meal.ingredients.reduce((kcal, {ingredient, amountGrams}) => kcal + ingredient.kcal * amountGrams/100 ,0)}
