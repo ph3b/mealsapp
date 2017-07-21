@@ -1,26 +1,48 @@
 import React from 'react';
 import Autosuggest from 'react-autosuggest';
-import { gql, graphql } from 'react-apollo';
+import { gql, withApollo } from 'react-apollo';
+import unionBy from 'lodash/unionBy';
+import Spinner from './Images/spinner.gif';
 
-class IngredientInput extends React.Component {
+const query = gql`
+  query($searchIngredient: String!) {
+    allIngredients(name_Istartswith: $searchIngredient, first: 20) {
+      edges {
+        node {
+          id
+          name
+          kcal
+          carbs
+          protein
+          fat
+          fiber
+        }
+      }
+    }
+  }
+`;
+
+class IngredientInput extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       value: '',
+      isLoading: false,
       enteredValue: '',
       allIngredients: [],
       suggestions: []
     };
     this.renderSuggestion = this.renderSuggestion.bind(this);
+    this.renderInput = this.renderInput.bind(this);
   }
 
   onSuggestionsFetchRequested({ value }) {
-    this.setState({
+    this.setState(prevState => ({
       suggestions: this.state.allIngredients.filter(item =>
         item.name.toLowerCase().includes(value.toLowerCase())
       ),
       enteredValue: value
-    });
+    }));
   }
 
   onSuggestionsClearRequested() {
@@ -31,15 +53,6 @@ class IngredientInput extends React.Component {
 
   getSuggestionValue(suggestion) {
     return suggestion.name;
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.state.suggestions.length === 0 && nextProps.data.allIngredients) {
-      const allIngredients = nextProps.data.allIngredients.edges.map(
-        edge => edge.node
-      );
-      this.setState({ allIngredients });
-    }
   }
 
   renderSuggestion(suggestion) {
@@ -55,12 +68,37 @@ class IngredientInput extends React.Component {
   }
 
   onChange(value, { newValue }) {
+    if (newValue.length > 2) {
+      this.setState({ isLoading: true })
+      this.props.client.query({
+        query: query,
+        variables: { searchIngredient: newValue }
+      })
+      .then(({ data }) => {
+        const allIngredients = data.allIngredients.edges.map(edge => edge.node);
+        this.setState(prevState => ({ allIngredients: unionBy(prevState.allIngredients, allIngredients, "id"), isLoading: false }));
+        this.onSuggestionsFetchRequested({ value: newValue })
+      })
+    }
     this.setState({ value: newValue });
   }
 
   onSuggestionSelected(value, { suggestion }) {
     this.setState({ value: '' });
     this.props.addIngredient(suggestion);
+  }
+
+  renderInput(inputProps) {
+    return (
+      <div>
+        <div><input {...inputProps} /></div>
+        {this.state.isLoading &&
+          <div style={{ position: 'absolute', top: "21px", right: "13px", opacity: "0.5"}}>
+            <img style={{ height: 20, width: 20 }} src={Spinner} />
+          </div>  
+        }
+      </div>
+    )
   }
 
   render() {
@@ -71,14 +109,13 @@ class IngredientInput extends React.Component {
       placeholder: 'Choose an ingredient'
     };
 
-    console.log(this.state);
-
     return (
       <div>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <div style={{ margin: '30px', display: 'flex' }}>
             <Autosuggest
               suggestions={suggestions}
+              renderInputComponent={this.renderInput}
               onSuggestionSelected={this.onSuggestionSelected.bind(this)}
               onSuggestionsFetchRequested={this.onSuggestionsFetchRequested.bind(
                 this
@@ -97,12 +134,6 @@ class IngredientInput extends React.Component {
   }
 }
 
-IngredientInput.defaultProps = {
-  data: {
-    tasks: []
-  }
-};
-
 const styles = {
   ingredientInput: {
     fontSize: '20px',
@@ -115,24 +146,4 @@ const styles = {
   }
 };
 
-const query = gql`
-  query($searchIngredient: String!) {
-    allIngredients(name_Istartswith: $searchIngredient) {
-      edges {
-        node {
-          id
-          name
-          kcal
-          carbs
-          protein
-          fat
-          fiber
-        }
-      }
-    }
-  }
-`;
-
-export default graphql(query, {
-  options: { variables: { searchIngredient: '' } }
-})(IngredientInput);
+export default withApollo(IngredientInput);

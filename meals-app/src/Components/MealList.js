@@ -1,6 +1,32 @@
 import React from 'react';
+import { gql, graphql } from 'react-apollo'
 
-const MealList = ({ mealList }) => {
+const query = gql`
+  query {
+    allMeals(first: 20) {
+      edges {
+        node {
+          id,
+          name,
+          ingredients {
+            amountGrams,
+            ingredient {
+              id,
+              kcal,
+              carbs,
+              protein,
+              fat,
+              fiber
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+const MealList = ({ allMeals, loading }) => {
+  console.log(allMeals)
   return (
     <div>
       <table style={{ width: '100%' }}>
@@ -23,7 +49,7 @@ const MealList = ({ mealList }) => {
               <strong>Carbs</strong>
             </td>
           </tr>
-          {mealList.map((meal, i) =>
+          {allMeals.map((meal, i) =>
             <tr key={i}>
               <td>
                 {meal.name}
@@ -32,16 +58,16 @@ const MealList = ({ mealList }) => {
                 {meal.type}
               </td>
               <td>
-                {meal.kcal}
+                {meal.ingredients.reduce((kcal, {ingredient, amountGrams}) => kcal + ingredient.kcal * amountGrams/100 ,0)}
               </td>
               <td>
-                {meal.protein}
+                {meal.ingredients.reduce((protein, {ingredient, amountGrams}) => protein + ingredient.protein * amountGrams/100 ,0)}
               </td>
               <td>
-                {meal.fat}
+                {meal.ingredients.reduce((fat, {ingredient, amountGrams}) => fat + ingredient.fat * amountGrams/100 ,0)}
               </td>
               <td>
-                {meal.carbs}
+                {meal.ingredients.reduce((carbs, {ingredient, amountGrams}) => carbs + ingredient.carbs * amountGrams/100 ,0)}
               </td>
             </tr>
           )}
@@ -51,4 +77,8 @@ const MealList = ({ mealList }) => {
   );
 };
 
-export default MealList;
+export default graphql(query, {
+  props: ({ ownProps, data: { allMeals, loading }}) => {
+    return { loading, allMeals: allMeals ? allMeals.edges.map(({node}) => node) : [] };
+  }
+})(MealList);
