@@ -1,8 +1,8 @@
-import React from 'react';
-import Autosuggest from 'react-autosuggest';
-import { gql, withApollo } from 'react-apollo';
-import unionBy from 'lodash/unionBy';
-import Spinner from './Images/spinner.gif';
+import React from "react";
+import Autosuggest from "react-autosuggest";
+import { gql, withApollo } from "react-apollo";
+import unionBy from "lodash/unionBy";
+import Spinner from "./Images/spinner.gif";
 
 const query = gql`
   query($searchIngredient: String!) {
@@ -26,9 +26,9 @@ class IngredientInput extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      value: '',
+      value: "",
       isLoading: false,
-      enteredValue: '',
+      enteredValue: "",
       allIngredients: [],
       suggestions: []
     };
@@ -59,7 +59,7 @@ class IngredientInput extends React.PureComponent {
     const { pickedIngredients } = this.props;
 
     return (
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
         <div>
           {suggestion.name}
         </div>
@@ -67,38 +67,58 @@ class IngredientInput extends React.PureComponent {
     );
   }
 
-  onChange(value, { newValue }) {
-    if (newValue.length > 2) {
-      this.setState({ isLoading: true })
-      this.props.client.query({
-        query: query,
-        variables: { searchIngredient: newValue }
-      })
-      .then(({ data }) => {
-        const allIngredients = data.allIngredients.edges.map(edge => edge.node);
-        this.setState(prevState => ({ allIngredients: unionBy(prevState.allIngredients, allIngredients, "id"), isLoading: false }));
-        this.onSuggestionsFetchRequested({ value: newValue })
-      })
+  onChange(value, { newValue, method }) {
+    if (method !== "type") return;
+
+    if (newValue.length >= 2) {
+      this.setState({ isLoading: true });
+      this.props.client
+        .query({
+          query: query,
+          variables: { searchIngredient: newValue }
+        })
+        .then(({ data }) => {
+          const allIngredients = data.allIngredients.edges.map(
+            edge => edge.node
+          );
+          this.setState(prevState => ({
+            allIngredients: unionBy(
+              prevState.allIngredients,
+              allIngredients,
+              "id"
+            ),
+            isLoading: false
+          }));
+          this.onSuggestionsFetchRequested({ value: newValue });
+        });
     }
     this.setState({ value: newValue });
   }
 
   onSuggestionSelected(value, { suggestion }) {
-    this.setState({ value: '' });
+    this.setState({ value: "" });
     this.props.addIngredient(suggestion);
   }
 
   renderInput(inputProps) {
     return (
       <div>
-        <div><input {...inputProps} /></div>
+        <div>
+          <input {...inputProps} />
+        </div>
         {this.state.isLoading &&
-          <div style={{ position: 'absolute', top: "21px", right: "13px", opacity: "0.5"}}>
+          <div
+            style={{
+              position: "absolute",
+              top: "21px",
+              right: "13px",
+              opacity: "0.5"
+            }}
+          >
             <img style={{ height: 20, width: 20 }} src={Spinner} />
-          </div>  
-        }
+          </div>}
       </div>
-    )
+    );
   }
 
   render() {
@@ -106,13 +126,13 @@ class IngredientInput extends React.PureComponent {
     const inputProps = {
       value: value,
       onChange: this.onChange.bind(this),
-      placeholder: 'Choose an ingredient'
+      placeholder: "Choose an ingredient"
     };
 
     return (
       <div>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <div style={{ margin: '30px', display: 'flex' }}>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <div style={{ margin: "30px", display: "flex" }}>
             <Autosuggest
               suggestions={suggestions}
               renderInputComponent={this.renderInput}
@@ -136,13 +156,13 @@ class IngredientInput extends React.PureComponent {
 
 const styles = {
   ingredientInput: {
-    fontSize: '20px',
-    fontWeight: '300',
-    width: '300px',
-    padding: '10px 15px',
-    margin: '50px 0px',
-    border: '6px solid #DADADA',
-    borderRadius: '5px'
+    fontSize: "20px",
+    fontWeight: "300",
+    width: "300px",
+    padding: "10px 15px",
+    margin: "50px 0px",
+    border: "6px solid #DADADA",
+    borderRadius: "5px"
   }
 };
 
