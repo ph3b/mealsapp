@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from rest_framework.authtoken.models import Token
+from rest_framework.permissions import AllowAny
 import json
 
 
 @api_view(["POST"])
+@permission_classes((AllowAny, ))
 def register(request):
     try:
         username = request.data["username"]
