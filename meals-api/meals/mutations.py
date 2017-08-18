@@ -6,7 +6,7 @@ from models import Meal, MealIngredient, Ingredient
 
 
 class IngredientInput(graphene.InputObjectType):
-    id = graphene.Int()
+    id = graphene.String()
     amount = graphene.Float()
 
 
@@ -33,13 +33,15 @@ class CreateMeal(graphene.Mutation):
         meal_data = args.get("meal_data")
         meal_name = meal_data.get("name")
         ingredients = meal_data.get("ingredients")
-
+        print(meal_name)
+        print(meal_data)
         meal = Meal(name=meal_name, owner=context.user)
         meal.save()
         for ingredient in ingredients:
             id = ingredient.get("id")
             amount = ingredient.get("amount")
-            ingredient = Ingredient.objects.get(pk=id)
+            ingredient_internal_id = from_global_id(id)[1]
+            ingredient = Ingredient.objects.get(pk=ingredient_internal_id)
             meal_ingredients = MealIngredient(meal=meal, ingredient=ingredient, amount_grams=amount)
             meal_ingredients.save()
 

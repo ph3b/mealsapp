@@ -1,17 +1,19 @@
 import React from 'react';
 
-const IngredientList = ({ ingredientList, removeIngredient }) => {
+const IngredientList = ({ ingredientList, removeIngredient, setAmount, totalValues }) => {
   return (
     <div>
       <table style={{ width: '100%' }}>
         <tbody>
           <tr style={{ borderBottom: '1px solid black' }}>
-            <td />
+            <td>
+              <strong>Ingredient</strong>
+            </td>
             <td>
               <strong>Amount</strong>
             </td>
             <td>
-              <strong>Kcal</strong>
+              <strong>Calories</strong>
             </td>
             <td>
               <strong>Protein</strong>
@@ -24,7 +26,7 @@ const IngredientList = ({ ingredientList, removeIngredient }) => {
             </td>
             <td />
           </tr>
-          {ingredientList.map((ingredient, i) => {
+          {ingredientList.map(({ingredient, weight}, i) => {
             const didClickDelete = () => {
               removeIngredient(ingredient);
             };
@@ -33,28 +35,32 @@ const IngredientList = ({ ingredientList, removeIngredient }) => {
                 <td>
                   {ingredient.name}
                 </td>
-                <td style={{ width: '120px' }}>
+                <td style={{ width: '80px' }}>
                   <input
+                    value={weight}
+                    step={10}
                     style={{
-                      width: '100px',
+                      width: '80%',
                       fontSize: '11px',
                       border: 'none',
                       borderBottom: '1px solid black'
                     }}
+                    onChange={(event) => setAmount(ingredient.id, parseInt(event.target.value))}
+                    type="number"
                     placeholder="Enter weight (g)"
                   />
                 </td>
                 <td>
-                  {ingredient.kcal}
+                  {ingredient.kcal * weight / 100} kcal
                 </td>
                 <td>
-                  {ingredient.protein}
+                  {ingredient.protein * weight / 100} g
                 </td>
                 <td>
-                  {ingredient.fat}
+                  {ingredient.fat * weight / 100} g
                 </td>
                 <td>
-                  {ingredient.carbs}
+                  {ingredient.carbs * weight / 100} g
                 </td>
                 <td>
                   <button
@@ -67,6 +73,15 @@ const IngredientList = ({ ingredientList, removeIngredient }) => {
               </tr>
             );
           })}
+          <tr style={{ height: 80 }}>
+            <td><strong>Total</strong></td>
+            <td>{totalValues.totalWeight} g</td>
+            <td>{totalValues.totalKcal} kcal</td>
+            <td>{totalValues.totalProteins} g</td>
+            <td>{totalValues.totalFat} g</td>
+            <td>{totalValues.totalCarbs} g</td>
+            <td />
+          </tr>
         </tbody>
       </table>
     </div>

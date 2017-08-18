@@ -55,7 +55,7 @@ const MealList = ({ allMeals, loading }) => {
                 {meal.name}
               </td>
               <td>
-                {meal.kind.substring(0, 1)}{meal.kind.substring(1).toLowerCase()}
+                {/* meal.kind.substring(0, 1)}{meal.kind.substring(1).toLowerCase() */}
               </td>
               <td>
                 {meal.ingredients.reduce((kcal, {ingredient, amountGrams}) => kcal + ingredient.kcal * amountGrams/100 ,0)}
