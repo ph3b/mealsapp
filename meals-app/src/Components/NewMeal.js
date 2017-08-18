@@ -101,47 +101,41 @@ class NewMeal extends React.PureComponent {
     }})
     .then(({ data }) => {
       const success = data.createMeal.ok;
-      
+
     })
   }
 
   render() {
     const { pickedIngredients, name } = this.state;
 
-    const totalWeight = pickedIngredients.reduce(
-      (total, {weight}) => total + weight,
-      0
-    );
-
-    const totalKcal = pickedIngredients.reduce(
-      (kcal, {ingredient, weight}) => kcal + ingredient.kcal * weight / 100,
-      0
-    );
-
-    const totalProteins = pickedIngredients.reduce(
-      (proteins, {ingredient, weight}) => proteins + ingredient.protein * weight / 100,
-      0
-    );
-
-    const totalCarbs = pickedIngredients.reduce(
-      (carbs, {ingredient, weight}) => carbs + ingredient.carbs * weight / 100,
-      0
-    );
-
-    const totalFat = pickedIngredients.reduce(
-      (fat, {ingredient, weight}) => fat + ingredient.fat * weight / 100,
-      0
-    );
-
-    const totalValues =  {totalProteins, totalCarbs, totalFat, totalWeight, totalKcal};
+    const totalValues =  {
+      totalProteins: pickedIngredients.reduce(
+        (proteins, {ingredient, weight}) => proteins + ingredient.protein * weight / 100,
+        0
+      ), 
+      totalCarbs: pickedIngredients.reduce(
+        (carbs, {ingredient, weight}) => carbs + ingredient.carbs * weight / 100,
+        0
+      ), 
+      totalFat: pickedIngredients.reduce(
+        (fat, {ingredient, weight}) => fat + ingredient.fat * weight / 100,
+        0
+      ),
+      totalWeight: pickedIngredients.reduce(
+        (total, {weight}) => total + weight,
+        0
+      ), 
+      totalKcal: pickedIngredients.reduce(
+        (kcal, {ingredient, weight}) => kcal + ingredient.kcal * weight / 100,
+        0
+      )
+    };
 
     const pieData = [
-      { name: "Fat", value: totalFat },
-      { name: "Carbs", value: totalCarbs },
-      { name: "Proteins", value: totalProteins }
+      { name: "Fat", value: totalValues.totalFat },
+      { name: "Carbs", value: totalValues.totalCarbs },
+      { name: "Proteins", value: totalValues.totalProteins }
     ];
-
-    console.log(this.state);
 
     return (
       <div>

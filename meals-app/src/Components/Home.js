@@ -10,6 +10,8 @@ import store from 'store';
 import MenuBar from './MenuBar';
 import MealList from './MealList';
 import NewMeal from './NewMeal';
+import MealDetail from './MealDetail';
+
 import { API_URL } from '../AppConfig';
 
 const Home = ({ match }) => {
@@ -36,10 +38,15 @@ const Home = ({ match }) => {
               <NewMeal match={match} />
             </div>}
         />
+        <Route 
+            path="/meal/:id"
+            exact
+            render={(match) => <MealDetail match={match} />}
+        />
         <Route
           path="/"
           exact
-          render={() => <MealList match={match} />}
+          render={(match) => <MealList match={match} />}
         />
       </div>
     </ApolloProvider>

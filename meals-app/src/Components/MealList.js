@@ -26,7 +26,7 @@ const query = gql`
   }
 `;
 
-const MealList = ({ allMeals, loading }) => {
+const MealList = ({ allMeals, loading, match }) => {
   return (
     <div>
       <table style={{ width: '100%' }}>
@@ -50,7 +50,7 @@ const MealList = ({ allMeals, loading }) => {
             </td>
           </tr>
           {allMeals.map((meal, i) =>
-            <tr key={i}>
+            <tr key={i} onClick={() => match.history.push(`/meals/${meal.id}`)} >
               <td>
                 {meal.name}
               </td>
